@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
 
-@Data
+//フロントエンドに渡すデータ
+@Data 
 public class GameDto {
     private String id;
     private GameState state;

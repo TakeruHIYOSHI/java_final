@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class StartGameUseCase {
-    private final GameRepository repository;
+    private final GameRepository repository; //RepositotyにGameオブジェクトを保存する
 
     public String execute() {
         // Create 4 players
@@ -23,7 +23,7 @@ public class StartGameUseCase {
 
         Game game = new Game(players);
         game.start();
-        repository.save(game);
+        repository.save(game); //RepositoryにGameオブジェクトを保存する
 
         return game.getId();
     }
