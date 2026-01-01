@@ -5,13 +5,16 @@ import com.zenn.uno.domain.model.Game;
 import com.zenn.uno.domain.model.Player;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class StartGameUseCase {
-    private final GameRepository repository; //RepositotyにGameオブジェクトを保存する
+    private final GameRepository repository; // RepositotyにGameオブジェクトを保存する
+
+    public StartGameUseCase(GameRepository repository) {
+        this.repository = repository;
+    }
 
     public String execute() {
         // Create 4 players
@@ -23,7 +26,7 @@ public class StartGameUseCase {
 
         Game game = new Game(players);
         game.start();
-        repository.save(game); //RepositoryにGameオブジェクトを保存する
+        repository.save(game); // RepositoryにGameオブジェクトを保存する
 
         return game.getId();
     }

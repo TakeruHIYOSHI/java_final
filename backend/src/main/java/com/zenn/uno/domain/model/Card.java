@@ -1,16 +1,43 @@
 package com.zenn.uno.domain.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import java.util.Objects;
 
-@Getter
-@EqualsAndHashCode
-@ToString
 public class Card {
     private final Color color;
     private final CardType type;
     private final Integer number; // 0-9, null for actions
+
+    public Color getColor() {
+        return color;
+    }
+
+    public CardType getType() {
+        return type;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    @Override
+    public String toString() {
+        return "Card(color=" + color + ", type=" + type + ", number=" + number + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Card card = (Card) o;
+        return color == card.color && type == card.type && Objects.equals(number, card.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, type, number);
+    }
 
     public Card(Color color, CardType type, Integer number) {
         this.color = color;

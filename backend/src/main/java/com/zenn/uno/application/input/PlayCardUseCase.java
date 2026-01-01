@@ -6,14 +6,18 @@ import com.zenn.uno.domain.model.Card;
 import com.zenn.uno.domain.model.Color;
 import com.zenn.uno.domain.model.Game;
 import com.zenn.uno.domain.model.Player;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class PlayCardUseCase {
     private final GameRepository repository;
     private final TurnProcessingService turnService;
+
+    public PlayCardUseCase(GameRepository repository, TurnProcessingService turnService) {
+        this.repository = repository;
+        this.turnService = turnService;
+    }
 
     public GameDto execute(String gameId, String playerId, Integer cardIndex, Color declaredColor) {
         Game game = repository.findById(gameId)

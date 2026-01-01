@@ -1,13 +1,23 @@
 package com.zenn.uno.domain.model;
 
 import java.util.List;
-import lombok.Getter;
 
-@Getter
 public class TurnManager {
     private final List<Player> players;
     private int currentIndex;
     private Direction direction;
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
 
     public TurnManager(List<Player> players) {
         this.players = players;

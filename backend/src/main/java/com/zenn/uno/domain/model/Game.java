@@ -3,10 +3,7 @@ package com.zenn.uno.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
 public class Game {
     private final String id;
     private final List<Player> players;
@@ -14,14 +11,53 @@ public class Game {
     private final List<Card> discardPile;
     private final TurnManager turnManager;
 
-    @Setter
     private GameState state;
-
-    @Setter
     private Color currentColor; // Current active color (important for Wilds)
-
-    @Setter
     private String winnerId; // ID of winner
+
+    public String getId() {
+        return id;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public List<Card> getDiscardPile() {
+        return discardPile;
+    }
+
+    public TurnManager getTurnManager() {
+        return turnManager;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+    public Color getCurrentColor() {
+        return currentColor;
+    }
+
+    public void setCurrentColor(Color currentColor) {
+        this.currentColor = currentColor;
+    }
+
+    public String getWinnerId() {
+        return winnerId;
+    }
+
+    public void setWinnerId(String winnerId) {
+        this.winnerId = winnerId;
+    }
 
     public enum GameState {
         WAITING,

@@ -7,7 +7,7 @@ import com.zenn.uno.application.input.PlayCardUseCase;
 import com.zenn.uno.application.input.StartGameUseCase;
 import com.zenn.uno.domain.model.Color;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,13 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/games")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*") // Allow frontend dev server
 public class GameController {
     private final StartGameUseCase startGameUseCase;
     private final GetGameStateUseCase getGameStateUseCase;
     private final PlayCardUseCase playCardUseCase;
     private final DrawCardUseCase drawCardUseCase;
+
+    public GameController(StartGameUseCase startGameUseCase,
+            GetGameStateUseCase getGameStateUseCase,
+            PlayCardUseCase playCardUseCase,
+            DrawCardUseCase drawCardUseCase) {
+        this.startGameUseCase = startGameUseCase;
+        this.getGameStateUseCase = getGameStateUseCase;
+        this.playCardUseCase = playCardUseCase;
+        this.drawCardUseCase = drawCardUseCase;
+    }
 
     @PostMapping("/start")
     public Map<String, String> start() {

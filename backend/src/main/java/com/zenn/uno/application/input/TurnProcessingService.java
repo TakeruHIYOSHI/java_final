@@ -11,15 +11,20 @@ import com.zenn.uno.domain.rule.CardPlayContext;
 import com.zenn.uno.domain.rule.CpuPolicy;
 import com.zenn.uno.domain.rule.EffectRegistry;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class TurnProcessingService {
     private final EffectRegistry effectRegistry;
     private final CpuPolicy cpuPolicy;
     private final GameRepository repository;
+
+    public TurnProcessingService(EffectRegistry effectRegistry, CpuPolicy cpuPolicy, GameRepository repository) {
+        this.effectRegistry = effectRegistry;
+        this.cpuPolicy = cpuPolicy;
+        this.repository = repository;
+    }
 
     public void processTurn(Game game, Player player, Card card, Color declaredColor) {
         // Remove card from hand

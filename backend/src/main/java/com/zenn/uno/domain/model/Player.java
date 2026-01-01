@@ -2,15 +2,28 @@ package com.zenn.uno.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
 public class Player {
     private final String id;
     private final String name;
     private final boolean isCpu;
     private final List<Card> hand;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isCpu() {
+        return isCpu;
+    }
+
+    public List<Card> getHand() {
+        return hand;
+    }
 
     // For CPU, we might inject a Strategy later, but keep it simple in model
 
