@@ -12,6 +12,8 @@
     user-select: none;
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: default;
+    overflow: hidden;
+    /* Fix content overflow */
 }
 
 .uno-card.small {
@@ -172,7 +174,8 @@
 }
 
 .center-symbol {
-    font-size: 3em;
+    font-size: 2.5em;
+    /* Reduced from 3em */
     font-weight: 800;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
 }
@@ -218,13 +221,72 @@
     height: 80%;
     border-radius: 50%;
     transform: rotate(0deg);
+    background: radial-gradient(circle at 30% 30%, #ff4d4d, #cc0000);
+    /* Red Gradient for depth */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    /* Inner shadow for depth */
 }
 
 .uno-card.back .logo {
-    color: var(--color-yellow);
+    font-family: 'Impact', 'Arial Black', sans-serif;
     font-size: 2em;
+    /* Reduced size */
     font-weight: 900;
-    text-shadow: 2px 2px 0 var(--color-black);
-    transform: rotate(-30deg);
+    color: rgb(251, 176, 38);
+    text-shadow: 2px 2px 0 black;
     display: block;
+}
+
+/* --- SWAP Card Styling --- */
+/* User Req: Center has "Swap Color" and Text is White. 
+   Since we don't know the exact "Swap Color" (it's wild), let's use a multi-color gradient.
+*/
+.uno-card.type-swap .inner,
+.uno-card.type-wild .inner,
+.uno-card.type-wild-draw4 .inner {
+    background: conic-gradient(var(--color-red), var(--color-blue), var(--color-green), var(--color-yellow), var(--color-red));
+    color: white;
+    text-shadow: 0 0 4px black;
+    border: 2px solid white;
+}
+
+/* --- Animations --- */
+
+/* Draw Animation (Flip In) - Applied to Hand Cards */
+@keyframes drawFlip {
+    0% {
+        opacity: 0;
+        transform: translateY(-100px) rotateY(180deg) scale(0.5);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotateY(0) scale(1);
+    }
+}
+
+.hand-card-wrapper {
+    /* Apply draw animation to all cards entering hand. 
+       React re-renders list, so new ones animate. 
+       Note: This might animate ALL cards on re-render if keys change or specific conditions met.
+       Ideally we only want NEW ones. But with simple list rendering, this creates a "shuffle in" effect which is cool.
+    */
+    animation: drawFlip 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Play Animation (Place) - Applied to Discard Pile Top Card */
+@keyframes placeSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(100px) scale(1.5);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.discard-area .uno-card {
+    animation: placeSlide 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }

@@ -40,7 +40,61 @@ function App() {
     }
   }, [gameId]);
 
+  const [showSwapAnimation, setShowSwapAnimation] = useState(false);
+  const [showUnoShout, setShowUnoShout] = useState(false);
+
+  // Track previous hand sizes to detect UNO
+  const prevHandSizesRef = useRef<number[]>([]);
+
   // CPU Turn Loop
+  useEffect(() => {
+    if (!gameId || !game || game.state === 'FINISHED') return;
+
+    // Detect Swap Event by checking top card changes? 
+    // Or better: Use turnEvent if available, or just heuristic.
+    // Heuristic: If top card becomes 'SWAP' and it wasn't before?
+    // But 'SWAP' card stays on pile.
+    // If 'game.topCard' changes to 'SWAP' from something else? 
+    // Yes, that indicates a play.
+
+    // We need 'prevTopCard'.
+  }, [gameId, game, fetchState]);
+
+  // Actually, let's track previous top card in a ref to detect changes
+  const prevTopCardRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!game) return;
+
+    const currentTop = game.topCard.type + game.topCard.color + game.topCard.number;
+
+    if (prevTopCardRef.current && prevTopCardRef.current !== currentTop) {
+      // Card changed
+      if (game.topCard.type === 'SWAP') {
+        // A SWAP card was just played!
+        setShowSwapAnimation(true);
+        setTimeout(() => setShowSwapAnimation(false), 2500); // Show for 2.5s
+      }
+    }
+
+    prevTopCardRef.current = currentTop;
+
+    // 2. UNO Shout Detection
+    // Check each player: if handSize became 1 (and was > 1 or undefined before)
+    game.players.forEach((p, index) => {
+      const prevSize = prevHandSizesRef.current[index];
+      // Note: If prevSize is undefined (first load), don't shout.
+      if (prevSize !== undefined && prevSize > 1 && p.handSize === 1 && p.id === '0') {
+        // Trigger UNO Shout! (Only for Human)
+        setShowUnoShout(true);
+        setTimeout(() => setShowUnoShout(false), 2000);
+      }
+    });
+    // Update refs
+    prevHandSizesRef.current = game.players.map(p => p.handSize);
+  }, [game]);
+
+
   useEffect(() => {
     if (!gameId || !game || game.state === 'FINISHED') return;
 
@@ -53,7 +107,7 @@ function App() {
         } catch (e) {
           console.error("CPU turn failed", e);
         }
-      }, 2000); // 2 second delay for visual pacing
+      }, 3000); // Increased delay to allow animations
       return () => clearTimeout(timer);
     }
   }, [gameId, game, fetchState]);
@@ -69,7 +123,8 @@ function App() {
       const myPlayer = updatedGame.players.find(p => p.id === '0');
       // If played multiple, handSize might be small. 
       // If handSize is 1, check UNO.
-      if (myPlayer && myPlayer.handSize === 1 && !updatedGame.players[updatedGame.currentPlayerIndex].cpu) {
+      // Since handlePlay is user action, we only check if *I* have 1 card.
+      if (myPlayer && myPlayer.handSize === 1) {
         triggerUnoCheck();
       }
     } catch (e: any) {
@@ -78,16 +133,21 @@ function App() {
     }
   };
 
+  // UNO Rule Check
   const triggerUnoCheck = () => {
+    // Show UNO Button
     setShowUnoButton(true);
+
+    // Timer to automatically fail if not clicked
     timerRef.current = setTimeout(async () => {
-      if (showUnoButton) { // If still showing
-        setShowUnoButton(false);
-        setUnoMessage("Forgot UNO! +1 Penalty");
-        setTimeout(() => setUnoMessage(null), 3000);
-        await handleDraw(); // Penalty Draw
-      }
-    }, 1000);
+      // Check if button is still showing (meaning user hasn't clicked it)
+      setShowUnoButton(false);
+      setUnoMessage("Forgot UNO! +1 Penalty"); // Penalty reduced to +1
+      setTimeout(() => setUnoMessage(null), 1000);
+
+      // Penalty Draw
+      await api.draw(gameId!); // Draw 1
+    }, 1000); // 1 second window (Hard Mode!)
   };
 
   const handleUnoClick = () => {
@@ -96,7 +156,7 @@ function App() {
       timerRef.current = null;
     }
     setShowUnoButton(false);
-    setUnoMessage("SAFE!");
+    setUnoMessage("UNO! SAFE!");
     setTimeout(() => setUnoMessage(null), 2000);
   };
 
@@ -165,6 +225,21 @@ function App() {
         <button className="uno-shout-btn" onClick={handleUnoClick}>
           UNO!
         </button>
+      )}
+
+      {/* Swap Animation Overlay */}
+      {showSwapAnimation && (
+        <div className="swap-overlay">
+          <div className="swap-icon">🔄</div>
+          <div className="swap-text">HANDS SWAPPING!</div>
+        </div>
+      )}
+
+      {/* UNO Shout Animation */}
+      {showUnoShout && (
+        <div className="global-uno-shout">
+          UNO!
+        </div>
       )}
     </div>
   );

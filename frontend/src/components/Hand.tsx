@@ -18,10 +18,17 @@ export const Hand: React.FC<HandProps> = ({ cards, onPlayCard, isMyTurn, playabl
 
         const clickedCard = cards[index];
 
-        // Smart Select Logic: Find playable matches
+        // Smart Select Logic: Find playable matches (Same Number/Type)
+        // Rule: First card must be playable (handled by initial click check).
+        // Subsequents: Can be ANY color as long as Number/Type matches.
+
         const matches = cards.map((c, i) => {
             if (i === index) return i;
-            if (!playableCards[i]) return -1; // Only playable duplicates
+
+            // Do NOT check playableCards[i] here. 
+            // Different colors ARE allowed if numbers match.
+            // But usually we can't play an invalid card *unless* we play a valid one first.
+            // So we just check for content match.
 
             // Match Logic
             if (clickedCard.type === 'NUMBER' && c.type === 'NUMBER' && c.number === clickedCard.number) return i;
@@ -30,18 +37,31 @@ export const Hand: React.FC<HandProps> = ({ cards, onPlayCard, isMyTurn, playabl
             return -1;
         }).filter(i => i !== -1);
 
-        if (matches.length > 1) {
+        // Ensure the CLICKED card (which is valid) is FIRST in the list.
+        // matches is sorted by index usually. We need to move 'index' to front.
+        const sortedMatches = [index, ...matches.filter(i => i !== index)];
+
+        if (sortedMatches.length > 1) {
             // Auto-select all matches
-            setSelectedIndices(matches);
+            setSelectedIndices(sortedMatches);
         } else {
             // Single card -> Play immediately
             onPlayCard([index]);
-            setSelectedIndices([]); // Just in case
+            setSelectedIndices([]);
         }
     };
 
     const handlePlaySelected = () => {
+        // Send sorted indices (Clicked one first)
         onPlayCard(selectedIndices);
+        setSelectedIndices([]);
+    };
+
+    const handlePlaySingle = () => {
+        // Play ONLY the first card (the one originally clicked and valid)
+        if (selectedIndices.length > 0) {
+            onPlayCard([selectedIndices[0]]);
+        }
         setSelectedIndices([]);
     };
 
@@ -56,6 +76,9 @@ export const Hand: React.FC<HandProps> = ({ cards, onPlayCard, isMyTurn, playabl
                     <div className="smart-play-buttons">
                         <button className="smart-btn play-all" onClick={handlePlaySelected}>
                             Play All ({selectedIndices.length})
+                        </button>
+                        <button className="smart-btn play-one" onClick={handlePlaySingle}>
+                            Play Just One
                         </button>
                         <button className="smart-btn cancel" onClick={handleCancelSelection}>
                             Cancel

@@ -37,7 +37,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick, playable = false, hid
 
     return (
         <div
-            className={`uno-card ${cardColorClass} ${playable ? 'playable' : ''} ${size}`}
+            className={`uno-card ${cardColorClass} type-${type.toLowerCase().replace('_', '-')} ${playable ? 'playable' : ''} ${size}`}
             onClick={playable ? onClick : undefined}
         >
             <div className="inner">

@@ -84,8 +84,8 @@ public class Game {
     }
 
     public void start() {
-        // Distribute 7 cards to each player
-        for (int i = 0; i < 7; i++) {
+        // Distribute 4 cards to each player
+        for (int i = 0; i < 4; i++) {
             for (Player p : players) {
                 p.addCard(deck.draw());
             }

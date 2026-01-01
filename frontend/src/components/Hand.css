@@ -30,20 +30,45 @@
     z-index: 100;
 }
 
-/* Unplayable cards are dimmed */
-/* Only apply when NOT selected and NOT hovered (or maybe always if unplayable?) */
-/* Spec: "Unplayable cards dim", "Playable cards pop" */
+/* Unplayable cards: Full Opacity, no pop */
 .hand-card-wrapper.unplayable {
-    opacity: 0.5;
-    filter: grayscale(0.5);
-    cursor: not-allowed;
-    transform: translateY(0);
-    /* Prevent hover pop if unplayable? */
+    cursor: default;
+    opacity: 1;
+    filter: brightness(0.8);
 }
 
 .hand-card-wrapper.unplayable:hover {
     transform: translateY(0);
-    /* Ensure no pop */
+}
+
+/* Playable Cards BLINK/PULSE */
+.hand-card-wrapper:not(.unplayable) {
+    animation: playablePulse 2s infinite;
+}
+
+@keyframes playablePulse {
+    0% {
+        transform: translateY(0);
+        filter: drop-shadow(0 0 2px gold);
+    }
+
+    50% {
+        transform: translateY(-10px);
+        filter: drop-shadow(0 0 10px gold);
+    }
+
+    100% {
+        transform: translateY(0);
+        filter: drop-shadow(0 0 2px gold);
+    }
+}
+
+/* Pause animation on hover */
+.hand-card-wrapper:not(.unplayable):hover {
+    animation: none;
+    transform: translateY(-40px);
+    filter: drop-shadow(0 0 15px gold);
+    z-index: 100;
 }
 
 
@@ -108,6 +133,12 @@
 .smart-btn.play-all {
     background: gold;
     color: black;
+    border: 2px solid white;
+}
+
+.smart-btn.play-one {
+    background: #0088ff;
+    color: white;
     border: 2px solid white;
 }
 

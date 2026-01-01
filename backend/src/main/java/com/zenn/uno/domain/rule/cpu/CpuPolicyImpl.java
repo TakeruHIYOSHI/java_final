@@ -38,35 +38,28 @@ public class CpuPolicyImpl implements CpuPolicy {
 
     @Override
     public Color selectColor(Game game, Player me) {
-        // Find most frequent color in hand
-        return me.getHand().stream()
-                .filter(c -> c.getColor() != Color.BLACK)
-                .collect(Collectors.groupingBy(Card::getColor, Collectors.counting()))
-                .entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(Color.RED); // Default if only wild
+        // WEAK/NORMAL: Pick Random Color
+        // HARD: Pick Most Frequent
+        if ("HARD".equalsIgnoreCase(difficulty)) {
+            return me.getHand().stream()
+                    .filter(c -> c.getColor() != Color.BLACK)
+                    .collect(Collectors.groupingBy(Card::getColor, Collectors.counting()))
+                    .entrySet().stream()
+                    .max(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .orElse(Color.RED);
+        } else {
+            // Random
+            Color[] colors = { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW };
+            return colors[new java.util.Random().nextInt(colors.length)];
+        }
     }
 
     private Card selectNormal(Game game, Player me, List<Card> playable) {
-        // Priority: Blocker (Skip, Draw2, Reverse, WildDraw4) > Others
-        // Check next player's hand size
-        Player nextPlayer = game.getTurnManager().getNextPlayer();
-        boolean danger = nextPlayer.getHandSize() <= 2;
-
-        return playable.stream()
-                .sorted((c1, c2) -> {
-                    int s1 = getBlockerScore(c1);
-                    int s2 = getBlockerScore(c2);
-                    if (s1 != s2)
-                        return s2 - s1; // Descending
-                    // Prefer Wild over WildDraw4 if not danger? No, Rule says Wild is most freq
-                    // color.
-                    // Just return first
-                    return 0;
-                })
-                .findFirst()
-                .orElse(playable.get(0));
+        // WEAK Logic: Play Randomly
+        // Do not prioritize attacks.
+        java.util.Collections.shuffle(playable);
+        return playable.get(0);
     }
 
     private int getBlockerScore(Card c) {
