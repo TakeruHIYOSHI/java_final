@@ -1,0 +1,123 @@
+.hand-container {
+    perspective: 1000px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    /* For smart overlay positioning context */
+}
+
+.hand {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    /* Negative margin to create overlap overlap */
+    transition: opacity 0.3s;
+}
+
+.hand-card-wrapper {
+    margin: 0 -30px;
+    /* Overlap */
+    transition: transform 0.2s, opacity 0.2s, filter 0.2s;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Playable cards slightly pop */
+.hand-card-wrapper:hover {
+    transform: translateY(-40px);
+    z-index: 100;
+}
+
+/* Unplayable cards are dimmed */
+/* Only apply when NOT selected and NOT hovered (or maybe always if unplayable?) */
+/* Spec: "Unplayable cards dim", "Playable cards pop" */
+.hand-card-wrapper.unplayable {
+    opacity: 0.5;
+    filter: grayscale(0.5);
+    cursor: not-allowed;
+    transform: translateY(0);
+    /* Prevent hover pop if unplayable? */
+}
+
+.hand-card-wrapper.unplayable:hover {
+    transform: translateY(0);
+    /* Ensure no pop */
+}
+
+
+/* Selected State */
+.hand-card-wrapper.selected {
+    transform: translateY(-50px) !important;
+    /* Force pop */
+    z-index: 200;
+    filter: drop-shadow(0 0 10px gold);
+    opacity: 1 !important;
+}
+
+.selected-indicator {
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    /* Adjust based on card width */
+    background: gold;
+    color: black;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-weight: bold;
+    border: 2px solid white;
+    z-index: 201;
+    pointer-events: none;
+}
+
+/* Smart Play Overlay */
+.smart-play-overlay {
+    position: absolute;
+    top: -60px;
+    /* Above hand */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: auto;
+}
+
+.smart-play-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.smart-btn {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.1s;
+    font-size: 1rem;
+}
+
+.smart-btn:active {
+    transform: scale(0.95);
+}
+
+.smart-btn.play-all {
+    background: gold;
+    color: black;
+    border: 2px solid white;
+}
+
+.smart-btn.cancel {
+    background: #444;
+    color: white;
+    border: 1px solid #666;
+}
+
+/* Dim entire hand when selection active but focus on selected */
+.hand.dimmed .hand-card-wrapper:not(.selected) {
+    opacity: 0.3;
+}

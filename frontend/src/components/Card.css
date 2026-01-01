@@ -1,0 +1,230 @@
+.uno-card {
+    width: 100px;
+    height: 150px;
+    border-radius: var(--card-radius);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--card-shadow);
+    background-color: var(--color-bg);
+    border: 3px solid white;
+    user-select: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+}
+
+.uno-card.small {
+    width: 60px;
+    height: 90px;
+    border-width: 2px;
+}
+
+.uno-card.large {
+    width: 140px;
+    height: 210px;
+}
+
+.uno-card.playable {
+    cursor: pointer;
+}
+
+.uno-card.playable:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.uno-card .inner {
+    width: 90%;
+    height: 90%;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-weight: 900;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    background: currentColor;
+    /* Matches the text color set by wrapper */
+}
+
+/* Colors */
+.color-red {
+    background-color: var(--color-red);
+    color: var(--color-red);
+}
+
+.color-blue {
+    background-color: var(--color-blue);
+    color: var(--color-blue);
+}
+
+.color-green {
+    background-color: var(--color-green);
+    color: var(--color-green);
+}
+
+.color-yellow {
+    background-color: var(--color-yellow);
+    color: var(--color-yellow);
+}
+
+.color-black {
+    background-color: var(--color-black);
+    color: var(--color-black);
+}
+
+/* Inner uses an oval or ellipse for the center usually, but we simplify to full fill with white text? 
+   Actually standard Uno cards have a colored body and white oval. 
+   Let's approximate: simple solid color card with white symbols.
+*/
+
+.uno-card .inner {
+    background: inherit;
+    /* Actually let's just use the wrapper background */
+
+    /* Let's make an oval white background inside? */
+    background: radial-gradient(ellipse at center, white 30%, transparent 80%);
+    /* Wait, radial gradient makes it look like a sun. 
+       Standard look: Colored Card, White Oval in center.
+    */
+    background: white;
+    clip-path: ellipse(80% 60% at 50% 50%);
+
+    /* Text color inside the white oval should match the card color */
+    color: inherit;
+
+    /* Wait, for the "color-red" card:
+       Background is Red.
+       Inner White Oval.
+       Text is Red (inside oval).
+       Corner numbers are White (outside oval).
+    */
+}
+
+/* Let's redefine implementation for better aesthetics */
+.uno-card {
+    /* Base color settable via utility classes */
+    color: white;
+    /* default text color for corners */
+}
+
+.uno-card.color-red {
+    background: var(--color-red);
+    color: white;
+}
+
+.uno-card.color-blue {
+    background: var(--color-blue);
+    color: white;
+}
+
+.uno-card.color-green {
+    background: var(--color-green);
+    color: white;
+}
+
+.uno-card.color-yellow {
+    background: var(--color-yellow);
+    color: white;
+}
+
+.uno-card.color-black {
+    background: var(--color-black);
+    color: white;
+}
+
+.uno-card .inner {
+    /* The white oval in the center */
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    background: white;
+    transform: rotate(-30deg);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Text inside oval takes the card's color */
+}
+
+.uno-card.color-red .inner {
+    color: var(--color-red);
+}
+
+.uno-card.color-blue .inner {
+    color: var(--color-blue);
+}
+
+.uno-card.color-green .inner {
+    color: var(--color-green);
+}
+
+.uno-card.color-yellow .inner {
+    color: var(--color-yellow);
+}
+
+.uno-card.color-black .inner {
+    color: var(--color-black);
+}
+
+.center-symbol {
+    font-size: 3em;
+    font-weight: 800;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.uno-card.small .center-symbol {
+    font-size: 2em;
+}
+
+.uno-card.large .center-symbol {
+    font-size: 4em;
+}
+
+.corner-symbol {
+    position: absolute;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    /* Always white on the colored background */
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.corner-symbol.top-left {
+    top: 5px;
+    left: 8px;
+}
+
+.corner-symbol.bottom-right {
+    bottom: 5px;
+    right: 8px;
+    transform: rotate(180deg);
+}
+
+/* Card Back */
+.uno-card.back {
+    background: var(--color-black);
+    border: 4px solid white;
+}
+
+.uno-card.back .inner {
+    background: var(--color-red);
+    clip-path: none;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    transform: rotate(0deg);
+}
+
+.uno-card.back .logo {
+    color: var(--color-yellow);
+    font-size: 2em;
+    font-weight: 900;
+    text-shadow: 2px 2px 0 var(--color-black);
+    transform: rotate(-30deg);
+    display: block;
+}

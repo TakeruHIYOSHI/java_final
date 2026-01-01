@@ -1,4 +1,4 @@
-import { GameDto, Color } from './types';
+import type { GameDto, Color } from './types';
 
 const API_BASE = 'http://localhost:8080/api/games';
 
@@ -14,11 +14,11 @@ export const api = {
         return await res.json();
     },
 
-    play: async (gameId: string, cardIndex: number, declaredColor?: Color): Promise<GameDto> => {
+    play: async (gameId: string, cardIndices: number[], declaredColor?: Color): Promise<GameDto> => {
         const res = await fetch(`${API_BASE}/${gameId}/actions/play`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ playerId: '0', cardIndex, declaredColor })
+            body: JSON.stringify({ playerId: '0', cardIndices, declaredColor })
         });
         if (!res.ok) {
             try {
@@ -38,6 +38,14 @@ export const api = {
             body: JSON.stringify({ playerId: '0' })
         });
         if (!res.ok) throw new Error('Error drawing card');
+        return await res.json();
+    },
+
+    processCpuTurn: async (gameId: string): Promise<GameDto> => {
+        const res = await fetch(`${API_BASE}/${gameId}/actions/cpu-turn`, {
+            method: 'POST'
+        });
+        if (!res.ok) throw new Error('Error processing CPU turn');
         return await res.json();
     }
 };
