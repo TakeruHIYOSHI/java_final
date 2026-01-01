@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class DrawCardUseCase {
     private final GameRepository repository;
-    private final TurnProcessingService turnService;
 
-    public DrawCardUseCase(GameRepository repository, TurnProcessingService turnService) {
+    public DrawCardUseCase(GameRepository repository) {
         this.repository = repository;
-        this.turnService = turnService;
     }
 
     public GameDto execute(String gameId, String playerId) {
@@ -34,7 +32,7 @@ public class DrawCardUseCase {
 
         // Draw Logic
         if (game.getDeck().isEmpty()) {
-            game.getDeck().refill(game.getDiscardPile());
+            game.reshuffle();
         }
         if (game.getDeck().isEmpty()) {
             throw new IllegalStateException("Deck empty");
@@ -60,8 +58,8 @@ public class DrawCardUseCase {
         if (!game.canPlay(drawn)) {
             // Cannot play -> Turn Ends
             game.getTurnManager().nextTurn();
-            // And Process CPUs
-            turnService.processCpuTurns(game);
+            // And Process CPUs - REMOVED for manual turn handling
+            // turnService.processCpuTurns(game);
         } else {
             // Can play -> Turn stays with Human. Human must perform another action (Play).
             // What if user wants to keep it? We need a "Pass" API?

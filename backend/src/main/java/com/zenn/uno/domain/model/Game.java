@@ -14,6 +14,15 @@ public class Game {
     private GameState state;
     private Color currentColor; // Current active color (important for Wilds)
     private String winnerId; // ID of winner
+    private LastAction lastAction;
+
+    public LastAction getLastAction() {
+        return lastAction;
+    }
+
+    public void setLastAction(LastAction lastAction) {
+        this.lastAction = lastAction;
+    }
 
     public String getId() {
         return id;
@@ -123,8 +132,9 @@ public class Game {
         if (card.getColor() == currentColor)
             return true;
 
-        // Match type
-        if (card.getType() == top.getType())
+        // Match type (Action cards match symbol)
+        // Note: Do NOT match generic NUMBER type here, Numbers must match value
+        if (card.getType() != CardType.NUMBER && card.getType() == top.getType())
             return true;
 
         // Match number
@@ -145,5 +155,14 @@ public class Game {
                 break;
             }
         }
+    }
+
+    public void reshuffle() {
+        if (discardPile.isEmpty())
+            return;
+        Card top = discardPile.remove(discardPile.size() - 1);
+        deck.refill(discardPile);
+        discardPile.clear();
+        discardPile.add(top);
     }
 }

@@ -4,6 +4,7 @@ import com.zenn.uno.adapter.web.dto.GameDto;
 import com.zenn.uno.application.input.DrawCardUseCase;
 import com.zenn.uno.application.input.GetGameStateUseCase;
 import com.zenn.uno.application.input.PlayCardUseCase;
+import com.zenn.uno.application.input.ProcessCpuTurnUseCase;
 import com.zenn.uno.application.input.StartGameUseCase;
 import com.zenn.uno.domain.model.Color;
 import java.util.Map;
@@ -24,15 +25,18 @@ public class GameController {
     private final GetGameStateUseCase getGameStateUseCase;
     private final PlayCardUseCase playCardUseCase;
     private final DrawCardUseCase drawCardUseCase;
+    private final ProcessCpuTurnUseCase processCpuTurnUseCase;
 
     public GameController(StartGameUseCase startGameUseCase,
             GetGameStateUseCase getGameStateUseCase,
             PlayCardUseCase playCardUseCase,
-            DrawCardUseCase drawCardUseCase) {
+            DrawCardUseCase drawCardUseCase,
+            ProcessCpuTurnUseCase processCpuTurnUseCase) {
         this.startGameUseCase = startGameUseCase;
         this.getGameStateUseCase = getGameStateUseCase;
         this.playCardUseCase = playCardUseCase;
         this.drawCardUseCase = drawCardUseCase;
+        this.processCpuTurnUseCase = processCpuTurnUseCase;
     }
 
     @PostMapping("/start")
@@ -50,7 +54,7 @@ public class GameController {
     public GameDto play(
             @PathVariable String id,
             @RequestBody PlayRequest request) {
-        return playCardUseCase.execute(id, request.playerId(), request.cardIndex(), request.declaredColor());
+        return playCardUseCase.execute(id, request.playerId(), request.cardIndices(), request.declaredColor());
     }
 
     @PostMapping("/{id}/actions/draw")
@@ -60,7 +64,12 @@ public class GameController {
         return drawCardUseCase.execute(id, request.playerId());
     }
 
-    public record PlayRequest(String playerId, Integer cardIndex, Color declaredColor) {
+    @PostMapping("/{id}/actions/cpu-turn")
+    public GameDto processCpuTurn(@PathVariable String id) {
+        return processCpuTurnUseCase.execute(id);
+    }
+
+    public record PlayRequest(String playerId, java.util.List<Integer> cardIndices, Color declaredColor) {
     }
 
     public record DrawRequest(String playerId) {

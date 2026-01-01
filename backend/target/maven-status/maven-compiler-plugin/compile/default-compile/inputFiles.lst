@@ -9,6 +9,7 @@
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/domain/rule/CardEffect.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/domain/rule/CpuPolicy.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/domain/model/Color.java
+/Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/application/input/ProcessCpuTurnUseCase.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/domain/rule/effect/ReverseEffect.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/application/input/DrawCardUseCase.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/domain/rule/effect/WildEffect.java
@@ -22,6 +23,7 @@
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/domain/model/Player.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/adapter/web/dto/GameDto.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/adapter/persistence/InMemoryGameRepository.java
+/Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/domain/model/LastAction.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/domain/rule/effect/WildDraw4Effect.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/UnoApplication.java
 /Users/hiyoshi.violet.act./java_final/backend/src/main/java/com/zenn/uno/application/input/StartGameUseCase.java
